@@ -1,3 +1,12 @@
 .vscode
 .vscode-server
+
+# Please edit the below file and add this text.
+#<?php
+#if (count(get_included_files()) == 1) {
+#    die("Direct access of this password is not permitted.");
+#}
+#$GLOBALS['group-sql-password'] = ''; # TODO: replace this empty string with what Isaac says
+#?>
+
 api/v1/get-group-password.php
