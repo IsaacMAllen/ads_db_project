@@ -7,7 +7,7 @@
 <html lang="en">
 <head>
 <?php
-include_once("head.php");
+include_once(getenv(root)."head.php");
 ?>
 <script src="index.js" async></script>
 </head>

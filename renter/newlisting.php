@@ -6,22 +6,11 @@
 </head>
 <body>
     <?php
-	$host = 'localhost';
-	$user = getenv('USER');
-	$pass = getenv('PASS');
-	$dbname = 'CS_2022_Spring_3430_101_t1';
-	try {
-	    $connection = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
-	    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	    echo("Connected to $dbname at $host successfully.\n");
-	} catch(PDOException $pe) {
-	    die($_ENV[0]);
-	    //die("Could not connect to the database $dbname :" . $pe->getMessage());
-	}
+	require 'connection.php';
 	if($_SERVER['REQUEST_METHOD'] == 'POST'){
 	    $productId = uniqid();
 	    echo($productId . "\n");
-	    $cost = 12;
+	    $cost = $_POST['cost'];
 	    $transactionId = null;
 	    $renterId = null;
 	    $picture = file_get_contents($_FILES['listImg']['tmp_name']);
@@ -52,6 +41,7 @@
 	}    
     ?>
     <form enctype="multipart/form-data" method="POST" name="frm_user_file">
+	<input type="text" name="cost" placeholder="listing price"/>
 	<input type="file" name="listImg"/> 
 	<input type="submit" value="Upload"/>
     </form>
