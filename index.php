@@ -19,7 +19,7 @@ include_once("head.php");
 <?php
 # TODO: write the main page stuff
 # Topbar and other dynamic/multi referenced content goes here
-include_once(getenv(root)."topbar.php");
+include_once("topbar.php");
 # Most of the remaining page as such will be generated using PHP code
 # To add HTML in, use `echo "<tag>text</tag>"`
 # To make the application single-page, replace text/image content dynamically
