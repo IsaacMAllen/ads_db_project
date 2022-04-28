@@ -10,6 +10,15 @@
 include_once("head.php");
 ?>
 <script src="index.js" async></script>
+<?php
+echo '
+<style>
+body {
+    background-image: url(\'https://student2.cs.appstate.edu/'.getenv(path).'images/main.jpg\');
+    background-size: 100%
+}
+</style>';
+?>
 </head>
 <body>
     <noscript>
