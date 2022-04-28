@@ -13,8 +13,8 @@ include_once("head.php");
 </head>
 <body>
     <noscript>
-        We recommend Javascript for the full ADS experience.<br>
-        You can still use the site, but features like single-page loading and analytics will be unavailable.
+	We recommend Javascript for the full ADS experience.<br>
+	You can still use the site, but features like single-page loading and analytics will be unavailable.
     </noscript>
 <?php
 # TODO: write the main page stuff
