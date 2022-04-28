@@ -6,16 +6,16 @@ include("api/v1/guard.php");
         <ul class="dropdown menu" data-dropdown-menu>
             <li class="menu-text">ADS.com</li>
             <li>
-                <a href="#">Offers</a>
+                <a href="?type=recent">Offers</a>
                 <ul class="menu vertical">
-                    <li><a href="#">Renters</a></li>
-                    <li><a href="#">Clients</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Services</a></li>
+                    <li><a href="?type=renters&count=25">Renters</a></li>
+                    <li><a href="?type=rentees&count=25">Clients</a></li>
+                    <li><a href="?type=product&count=25">Products</a></li>
+                    <li><a href="?type=service&count=25">Services</a></li>
                 </ul>
             </li>
-            <li><a href="#">Features</a></li>
-            <li><a href="#">About Us</a></li>
+            <li><a href="features.php">Features</a></li>
+            <li><a href="about.php">About Us</a></li>
         </ul>
     </div>
     <div class="top-bar-right">
