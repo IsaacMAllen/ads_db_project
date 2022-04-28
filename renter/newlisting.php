@@ -7,15 +7,16 @@
 <body>
     <?php
 	$host = 'localhost';
-	$user = 'allenim';
-	$pass = 'Appstate123';
+	$user = getenv('USER');
+	$pass = getenv('PASS');
 	$dbname = 'CS_2022_Spring_3430_101_t1';
 	try {
 	    $connection = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
 	    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	    echo("Connected to $dbname at $host successfully.\n");
 	} catch(PDOException $pe) {
-	    die("Could not connect to the database $dbname :" . $pe->getMessage());
+	    die($_ENV[0]);
+	    //die("Could not connect to the database $dbname :" . $pe->getMessage());
 	}
 	if($_SERVER['REQUEST_METHOD'] == 'POST'){
 	    $productId = uniqid();
