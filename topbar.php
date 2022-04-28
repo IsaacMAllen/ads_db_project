@@ -46,16 +46,6 @@ include("api/v1/guard.php");
 	                <h1>Login</h1>
 	                <div>
 	                    <div>
-	                        <label>Name: </label><span id="userName-info"
-	                            class="info"></span>
-	                    </div>
-	                    <div>
-	                        <input type="text" id="userName" name="userName"
-	                            class="inputBox" />
-	                    </div>
-	                </div>
-	                <div>
-	                    <div>
 	                        <label>Email: </label><span id="userEmail-info"
 	                            class="info"></span>
 	                    </div>
@@ -63,9 +53,22 @@ include("api/v1/guard.php");
 	                        <input type="text" id="userEmail" name="userEmail"
 	                            class="inputBox" />
 	                    </div>
+	                </div>
+	                <div>
+	                    <div>
+	                        <label>Password: </label><span id="userPassword"
+	                            class="info"></span>
+	                    </div>
+	                    <div>
+	                        <input type="password" id="userPassword" name="userPassword"
+	                            class="inputBox" />
+	                    </div>
 	    	    </div>
 	    	    <div>
-	                    <input type="submit" id="send" name="send" value="Send" />
+	                    <input type="submit" id="login" name="login" value="Login" />
+	                </div>
+		    <div>
+	                    <input type="submit" id="register" name="register" value="Register" />
 	                </div>
 	            </form>
 	    </div>
@@ -75,7 +78,8 @@ $(document).ready(function () {
 	$("#login-popup").show();
     });
     //Login Form validation on click event
-	$("#login-form").on("submit", function () {
+    $("#login-form").submit(function(event) {
+	    if(event.originalEvent.submitter.name == 'login') { 
 	    var valid = true;
 	    $(".info").html("");
 	    $("inputBox").removeClass("input-error");
@@ -99,7 +103,10 @@ $(document).ready(function () {
 		valid = false;
 	    }
 	    return valid;
-	});
+	    }
+	    
+    	});
 });
+
 </script>
 </nav>
