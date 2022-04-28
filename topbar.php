@@ -10,7 +10,8 @@ include("api/v1/guard.php");
                 <ul class="menu vertical">
                     <li><a href="#">Renters</a></li>
                     <li><a href="#">Clients</a></li>
-                    <li><a href="#">Products/Services</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Services</a></li>
                 </ul>
             </li>
             <li><a href="#">Features</a></li>
