@@ -13,8 +13,8 @@ include("api/v1/guard.php");
                     <li><a href="#">Products/Services</a></li>
                 </ul>
             </li>
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">About Us</a></li>
         </ul>
     </div>
     <div class="top-bar-right">
