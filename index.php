@@ -1,7 +1,31 @@
 <?php
 # This is code that runs before HTML content is sent
 # Functionality like AJAX not handled through api/v1 is here.
-# This includes search requests and other query string-based things.
+# This includes search requests and single-page things.
+# All of this will be handled with POST requests to differentiate.
+
+# If the page uses the get method load the information from the query string
+if ($_SERVER['REQUEST_METHOD'] === 'POST')
+{
+    parse_str($_SERVER['QUERY'], $params);
+}
+else # If the page is loaded with POST or PATCH
+{
+    $params = $_POST;
+}
+
+# Get information from search
+$query = $params['q'];
+$id = $params['id'];
+# Get information
+if (isset($query))
+{
+    # $slist = search(q);
+}
+elseif (isset($id))
+{
+    $info = 
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

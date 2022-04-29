@@ -35,22 +35,24 @@ function get_object_by_uuid($id)
     if (isset($result->ProductId))
     {
         $idquery2->execute(['project_product', 'productId', $result->ProductId]);
-        return $idquery2->fetchAll();
+        return array_merge($idquery2->fetchAll(), array('type' => 'product'));
     }
     elseif (isset($result->RenterId))
     {
         $idquery2->execute(['RenterUnauth', 'userId', $result->RenterId]);
-        return $idquery2->fetchAll();
+        return array_merge($idquery2->fetchAll(), array('type' => 'renter'));
     }
     elseif (isset($result->RenteeId))
     {
         $idquery2->execute(['RenteeUnauth', 'userId', $result->RenteeId]);
-        return $idquery2->fetchAll();
+        return $array_merge($idquery2->fetchAll(), array('type' => 'rentee'));
     }
     else
     {
         return NULL;
     }
 }
-function
+
+# 
+
 ?>
