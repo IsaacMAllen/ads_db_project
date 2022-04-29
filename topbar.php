@@ -31,7 +31,7 @@ include("api/v1/guard.php");
 		?>
 	    </div>
 	    </li>
-	    <li><input type="search" placeholder="Search"></li>
+	    <li><input type="search" placeholder="Search listings"></li>
             <li><button type="button" class="button">Search</button></li>
         </ul>
     </div>

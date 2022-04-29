@@ -4,21 +4,12 @@
 # This includes search requests and other query string-based things.
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="en">
 <head>
 <?php
 include_once("head.php");
 ?>
 <script src="index.js" async></script>
-<?php
-echo '
-<style>
-body {
-    background-image: url(\'https://student2.cs.appstate.edu/'.getenv(path).'images/main.jpg\');
-    background-size: 100%
-}
-</style>';
-?>
 </head>
 <body>
     <noscript>
@@ -42,5 +33,19 @@ include_once("topbar.php");
 # PDO offers parameterization and allows requests to be re-used which is VITAL to this project.
 # only run requests for content and information in a file in api/v1 to make the site more modular
 ?>
+    <div class="hero-section">
+	<div>
+	<div class="hero-section-text">
+	    <h1 id="hero">AdsDb</h1>
+	</div>
+	<input type="search" name="search" placeholder="Discover the possibilites" class="animated-search-form">
+	</div>
+	<div class="hero-section-text">
+	    <h5 id="herosub">Renting Together</h5>
+	</div>    
+    </div>
+<script>
+$(document).foundation();
+</script>
 </body>
 </html>
