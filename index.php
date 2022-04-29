@@ -5,9 +5,9 @@
 # All of this will be handled with POST requests to differentiate.
 
 # If the page uses the get method load the information from the query string
-if ($_SERVER['REQUEST_METHOD'] === 'POST')
+if ($_SERVER['REQUEST_METHOD'] !== 'POST')
 {
-    parse_str($_SERVER['QUERY'], $params);
+    parse_str($_SERVER['QUERY_STRING'], $params);
 }
 else # If the page is loaded with POST or PATCH
 {
@@ -16,15 +16,19 @@ else # If the page is loaded with POST or PATCH
 
 # Get information from search
 $query = $params['q'];
+$count = $params['count'];
+$offset = $params['offset'];
 $id = $params['id'];
 # Get information
 if (isset($query))
 {
-    # $slist = search(q);
+    include_once('api/v1/search.php');
+    $slist = search($query, $count, $offset);
 }
 elseif (isset($id))
 {
-    $info = 
+    include_once('api/v1/info.php');
+    $info = info($id);
 }
 ?>
 <!DOCTYPE html>
