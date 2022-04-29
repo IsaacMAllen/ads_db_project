@@ -13,6 +13,7 @@ $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
 try
 {
     $pdo = new PDO($dsn, $user, $password);
+    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 }
 catch (PDOException $e)
 {
@@ -79,7 +80,7 @@ $profile_name = ' WHERE profileName LIKE ?';
 $name_product = ' WHERE name LIKE ? AND tflag = \'I\'';
 $name_service = ' WHERE name LIKE ? AND tflag = \'S\'';
 # Filtering for high quality results
-$filter_profile_name = ' ORDER BY profileName';
+$filter_profile_name = ' ORDER BY profileName DESC ';
 $filter_name = ' ORDER BY name DESC ';
 $filter_continued = 'LIMIT ?,?';
 # Renters and rentees
@@ -124,15 +125,18 @@ function get_object_by_keywords($kw = '', $count = 25, $offset = 0, $type = '')
     }
     # Longer names but same amount of globals as last time
     global $search_query_rentee, $search_query_renter, $search_query_product, $search_query_service;
-    $inputs = array($kw, $offset, $count + $offset);
+    $queries = array($search_query_rentee, $search_query_renter, $search_query_product, $search_query_service);
     $results = array();
-    $search_query_rentee->execute($inputs);
+    $kw = '%' . $kw . '%';
+    foreach ($queries as $dispose => $query) {
+        $query->bindParam(1, $kw);
+        $query->bindParam(2, $offset, PDO::PARAM_INT);
+        $query->bindParam(3, $count, PDO::PARAM_INT);
+        $query->execute();
+    }
     $results->rentee = $search_query_rentee->fetchAll();
-    $search_query_renter->execute($inputs);
     $results->renter = $search_query_renter->fetchAll();
-    $search_query_product->execute($inputs);
     $results->product = $search_query_product->fetchAll();
-    $search_query_service->execute($inputs);
     $results->service = $search_query_service->fetchAll();
     # Select results by type
 
@@ -140,7 +144,6 @@ function get_object_by_keywords($kw = '', $count = 25, $offset = 0, $type = '')
     {
         return $results[$type];
     }
-
     return $results;
 }
 

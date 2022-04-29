@@ -1,6 +1,5 @@
 <?php
 include_once('access.php');
-header('Content-Type: application/json');
 
 # Search function. This lets you search the database for a name, sorted alphabetically.
 # Between count and offset
@@ -12,6 +11,7 @@ function search($kw, $count, $offset, $type)
 
 if (count(get_included_files()) === 4)
 {
+    header('Content-Type: application/json');
     # If the page uses the get method load the information from the query string
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
     {
