@@ -104,6 +104,11 @@ $(document).ready(function () {
 	    }
 	    
     	});
+    $(document).on("click", function(event) {
+	if((!$(event.target).closest("#login-form").length && $("#login-popup").is(":visible") && !$(event.target).closest("#login-icon").length)) {
+	    $("#login-popup").hide();
+	} 
+    });
 });
 </script>
 
