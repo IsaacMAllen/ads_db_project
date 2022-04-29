@@ -4,9 +4,9 @@ header('Content-Type: application/json');
 
 # Search function. This lets you search the database for a name, sorted alphabetically.
 # Between count and offset
-function search($kw, $count = 25, $offset = 0)
+function search($kw, $count = 25, $offset = 0, $type = '')
 {
-    $results = json_encode(get_object_by_keywords($kw, $count, $offset));
+    $results = json_encode(get_object_by_keywords($kw, $count, $offset, $type));
     return $results;
 }
 
@@ -26,13 +26,8 @@ if (count(get_included_files()) === 4)
     $query = $params['q'];
     $count = $params['count'];
     $offset = $params['offset'];
+    $type = $params['type'];
 
-    # Get information from search
-    $id = $params['q'];
-    if (!isset($q))
-    {
-        echo 'undefined';
-    }
-    echo search($query, $count, $offset);
+    echo search($query, $count, $offset, $type);
 }
 ?>

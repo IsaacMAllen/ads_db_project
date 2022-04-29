@@ -39,8 +39,8 @@ body *
             <li>
                 <a href="?type=recent">Offers</a>
                 <ul class="menu vertical">
-                    <li><a href="?type=renters&count=25">Renters</a></li>
-                    <li><a href="?type=rentees&count=25">Clients</a></li>
+                    <li><a href="?type=renter&count=25">Renters</a></li>
+                    <li><a href="?type=rentee&count=25">Clients</a></li>
                     <li><a href="?type=product&count=25">Products</a></li>
                     <li><a href="?type=service&count=25">Services</a></li>
                 </ul>
