@@ -1,7 +1,38 @@
 <?php
 include("api/v1/guard.php");
 ?>
-<div class="top-bar">
+<style>
+body
+{
+    background-color: #222222;
+    color: #DDDDDD;
+}
+
+body *
+{
+    background-color: #222222;
+    color: #DDDDDD;
+}
+
+#top-bar
+{
+    background-color: #000000;
+    color: #CCCCCC;
+}
+
+#top-bar *
+{
+    background-color: #000000;
+    color: #CCCCCC;
+}
+
+#top-bar button
+{
+    background-color: #0000CC;
+    color: #CCCCCC;
+}
+</style>
+<div class="top-bar" id="top-bar">
     <div class="top-bar-left">
         <ul class="dropdown menu" data-dropdown-menu>
             <li class="menu-text">ADS.com</li>
