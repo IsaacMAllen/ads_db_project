@@ -74,14 +74,14 @@ function get_object_by_uuid($id)
 
 # Get for hybrid search and stuff by building lots of strings
 $cols_user = 'SELECT userId, profileName FROM ';
-$cols_product = 'SELECT userId, name, cost, offered_on FROM ';
-$profile_name = ' WHERE CONTAINS(profileName, ?)';
-$name_product = ' WHERE CONTAINS(name, ?) AND tflag = \'I\' ';
-$name_service = ' WHERE CONTAINS(name, ?) AND tflag = \'S\' ';
+$cols_product = 'SELECT productId, name, cost, offered_on FROM ';
+$profile_name = ' WHERE profileName LIKE ?';
+$name_product = ' WHERE name LIKE ? AND tflag = \'I\'';
+$name_service = ' WHERE name LIKE ? AND tflag = \'S\'';
 # Filtering for high quality results
 $filter_profile_name = ' ORDER BY profileName';
-$filter_name = ' ORDER BY name';
-$filter_continued = ' DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY';
+$filter_name = ' ORDER BY name DESC ';
+$filter_continued = 'LIMIT ?,?';
 # Renters and rentees
 $search_query_rentee = $pdo->prepare($cols_user . 'RenteeUnauth' . $profile_name . $filter_profile_name . $filter_continued);
 $search_query_rentee->setFetchMode(PDO::FETCH_ASSOC);
@@ -96,13 +96,35 @@ $search_query_service->setFetchMode(PDO::FETCH_ASSOC);
 # Get an object's information by its keywords
 function get_object_by_keywords($kw = '', $count = 25, $offset = 0, $type = '')
 {
+    # Word of advice: PHP's default arguments are not applied for null values.
+    if (!isset($kw))
+    {
+        $kw = '';
+    }
+    if (!isset($count))
+    {
+        $count = 25;
+    }
+    if (!isset($offset))
+    {
+        $offset = 0;
+    }
+    if (!isset($type))
+    {
+        $type = '';
+    }
+    # Request checking for safety
     if ($count > 100 or ($count > 25 and $kw === ''))
     {
         return array('error' => 'request too large');
     }
+    if ($count <= 0 or $offset < 0)
+    {
+        return array('error' => 'invalid count or offset');
+    }
     # Longer names but same amount of globals as last time
     global $search_query_rentee, $search_query_renter, $search_query_product, $search_query_service;
-    $inputs = array($kw, $offset, $count);
+    $inputs = array($kw, $offset, $count + $offset);
     $results = array();
     $search_query_rentee->execute($inputs);
     $results->rentee = $search_query_rentee->fetchAll();
