@@ -23,9 +23,11 @@ catch (PDOException $e)
 $password = $user = $db = $host = '';
 
 # Prepare some queries to get information based on ids from the database
-$idqueryproduct = $pdo->prepare('SELECT productId, name, cost FROM project_product WHERE productId = ? AND tflag = I');
+$idquerycombined = 'SELECT productId, name, cost FROM project_product WHERE productId = ? ';
+
+$idqueryproduct = $pdo->prepare($idquerycombined . 'AND tflag = \'I\'');
 $idqueryproduct->setFetchMode(PDO::FETCH_ASSOC);
-$idqueryservice = $pdo->prepare('SELECT productId, name, cost FROM project_product WHERE productId = ? AND tflag = S');
+$idqueryservice = $pdo->prepare($idquerycombined . 'AND tflag = \'S\'');
 $idqueryservice->setFetchMode(PDO::FETCH_ASSOC);
 $idqueryrentee = $pdo->prepare('SELECT * FROM RenteeUnauth WHERE userId = ?');
 $idqueryrentee->setFetchMode(PDO::FETCH_ASSOC);
@@ -74,8 +76,8 @@ function get_object_by_uuid($id)
 $cols_user = 'SELECT userId, profileName FROM ';
 $cols_product = 'SELECT userId, name, cost, offered_on FROM ';
 $profile_name = ' WHERE CONTAINS(profileName, ?)';
-$name_product = ' WHERE CONTAINS(name, ?) AND tflag = I';
-$name_service = ' WHERE CONTAINS(name, ?) AND tflag = S';
+$name_product = ' WHERE CONTAINS(name, ?) AND tflag = \'I\' ';
+$name_service = ' WHERE CONTAINS(name, ?) AND tflag = \'S\' ';
 # Filtering for high quality results
 $filter_profile_name = ' ORDER BY profileName';
 $filter_name = ' ORDER BY name';
@@ -92,8 +94,12 @@ $search_query_product->setFetchMode(PDO::FETCH_ASSOC);
 $search_query_service = $pdo->prepare($cols_product . 'project_product' . $name_service . $filter_name . $filter_continued);
 $search_query_service->setFetchMode(PDO::FETCH_ASSOC);
 # Get an object's information by its keywords
-function get_object_by_keywords($kw, $count, $offset, $type)
+function get_object_by_keywords($kw = '', $count = 25, $offset = 0, $type = '')
 {
+    if ($count > 100 or ($count > 25 and $kw === ''))
+    {
+        return array('error' => 'request too large');
+    }
     # Longer names but same amount of globals as last time
     global $search_query_rentee, $search_query_renter, $search_query_product, $search_query_service;
     $inputs = array($kw, $offset, $count);
