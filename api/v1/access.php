@@ -133,22 +133,22 @@ function get_object_by_keywords($kw = '', $count = 25, $offset = 0, $type = '')
     $search_query_rentee->bindParam('offset', $offset, PDO::PARAM_INT);
     $search_query_rentee->bindParam('count', $count, PDO::PARAM_INT);
     $search_query_rentee->execute();
-    array_push($results, "rentee", $search_query_rentee->fetchAll());
+    $results["rentee"] = $search_query_rentee->fetchAll();
     $search_query_renter->bindParam('name', $kw);
     $search_query_renter->bindParam('offset', $offset, PDO::PARAM_INT);
     $search_query_renter->bindParam('count', $count, PDO::PARAM_INT);
     $search_query_renter->execute();
-    array_push($results, "renter", $search_query_renter->fetchAll());
+    $results["renter"] = $search_query_renter->fetchAll();
     $search_query_product->bindParam('name', $kw);
     $search_query_product->bindParam('offset', $offset, PDO::PARAM_INT);
     $search_query_product->bindParam('count', $count, PDO::PARAM_INT);
     $search_query_product->execute();
-    array_push($results, "product", $search_query_product->fetchAll());
+    $results["product"] = $search_query_product->fetchAll();
     $search_query_service->bindParam('name', $kw);
     $search_query_service->bindParam('offset', $offset, PDO::PARAM_INT);
     $search_query_service->bindParam('count', $count, PDO::PARAM_INT);
     $search_query_service->execute();
-    array_push($results, "service", $search_query_service->fetchAll());
+    $results["service"] = $search_query_service->fetchAll();
     # Select results by type
 
     if (isset($results[$type]))
@@ -158,4 +158,9 @@ function get_object_by_keywords($kw = '', $count = 25, $offset = 0, $type = '')
     return $results;
 }
 
+# Get an image with an id and type
+function get_image_id_type($id, $type)
+{
+    # if ($type = )
+}
 ?>
