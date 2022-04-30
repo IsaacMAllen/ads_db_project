@@ -14,6 +14,7 @@ try
 {
     $pdo = new PDO($dsn, $user, $password);
     $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
 catch (PDOException $e)
 {
@@ -193,4 +194,15 @@ function get_image_id_type($id, $type)
         return $image_query_rentee->fetchAll()[0]["picture"];
     }
 }
+
+# Add a rentee to the database--we will add an option to fill a form to become a rentee soon
+$query_add_rentee = $pdo->prepare("INSERT INTO project_rentee (userId, pwHash, email) VALUES (?, ?, ?)");
+function add_rentee($userid, $passwordHash, $email)
+{
+    try {
+    global $query_add_rentee;
+    $query_add_rentee->execute(array($userid, $passwordHash, $email)); } catch(Exception $e) {die($e->getMessage());}
+}
+
+
 ?>

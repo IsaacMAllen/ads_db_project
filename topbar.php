@@ -1,5 +1,15 @@
 <?php
-include("api/v1/guard.php");
+# Start the session
+session_start();
+$directoryname = dirname($_SERVER['SCRIPT_NAME']);
+$uri = urlencode($_SERVER['REQUEST_URI']);
+$querystring .= "?redir=$uri";
+include("$directoryname/api/v1/guard.php");
+# Required for the username in the form currently
+# Generate a CSRF nonce
+$_SESSION['token'] = bin2hex(random_bytes(32));
+# Relative path!
+
 ?>
 <style>
 
@@ -58,8 +68,14 @@ include("api/v1/guard.php");
 </div>
 
 <div id="login-popup">
-	<form class="login-form" action="" id="login-form"
-		method="post" enctype="multipart/form-data">
+	<form action="<?php echo "https://" . $_SERVER["SERVER_NAME"] . 
+		"$directoryname/api/v1/authenticate.php" ?>"
+		class="login-form" action="" id="login-form" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="token" value="<?php
+    		echo hash_hmac('sha256', "api/v1/authenticate.php", $_SESSION['token']);
+		?>" />
+		<input type="hidden" name="redir" value="<?php echo "https://" . $_SERVER["SERVER_NAME"] .
+			$_SERVER['PHP_SELF'] . $_SERVER['QUERY_STRING']; ?>"/>
 		<h1>Login</h1>
 		<div>
 			<div>

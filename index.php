@@ -84,7 +84,8 @@ GRIDHEAD;
         {
             $itemid = $item->productId;
             $itemname = $item->name;
-            $price = "<p class=\"price\">${cost}/mo</p>";
+            $cost = $item->cost;
+            $price = "<p class=\"price\">$${cost}/mo</p>";
             $rent = "<a href=\"/rent/?id={$itemid}\">Rent</a>";
         }
         else
