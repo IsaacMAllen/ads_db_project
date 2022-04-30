@@ -10,6 +10,7 @@ function info($id = '')
 
 if (count(get_included_files()) === 4)
 {
+    header('Content-Type: application/json');
     # If the page uses the get method load the information from the query string
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
     {
