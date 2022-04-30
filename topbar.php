@@ -2,10 +2,6 @@
 include("api/v1/guard.php");
 ?>
 <style>
-body
-{
-    background-color: #222222;
-}
 
 #top-bar
 {
@@ -50,7 +46,7 @@ body
 	    <div id="login-icon">
 		<?php 
 		    echo '
-		    <img src="'.getenv(path).'icon/icon-login.png" height="10">
+		    <img src="/icon/icon-login.png" height="10">
 		    ';
 		?>
 	    </div>
@@ -61,39 +57,38 @@ body
     </div>
 </div>
 
-
-	    <div id="login-popup">
-	            <form class="login-form" action="" id="login-form"
-	                method="post" enctype="multipart/form-data">
-	                <h1>Login</h1>
-	                <div>
-	                    <div>
-	                        <label>Email: </label><span id="userEmail-info"
-	                            class="info"></span>
-	                    </div>
-	                    <div>
-	                        <input type="text" id="userEmail" name="userEmail"
-	                            class="inputBox" />
-	                    </div>
-	                </div>
-	                <div>
-	                    <div>
-	                        <label>Password: </label><span id="userPassword"
-	                            class="info"></span>
-	                    </div>
-	                    <div>
-	                        <input type="password" id="userPassword" name="userPassword"
-	                            class="inputBox" />
-	                    </div>
-	    	    </div>
-	    	    <div>
-	                    <input type="submit" id="login" name="login" value="Login" />
-	                </div>
-		    <div>
-	                    <input type="submit" id="register" name="register" value="Register" />
-	                </div>
-	            </form>
-	    </div>
+<div id="login-popup">
+	<form class="login-form" action="" id="login-form"
+		method="post" enctype="multipart/form-data">
+		<h1>Login</h1>
+		<div>
+			<div>
+				<label>Email: </label><span id="userEmail-info"
+					class="info"></span>
+			</div>
+			<div>
+				<input type="text" id="userEmail" name="userEmail"
+					class="inputBox" />
+			</div>
+		</div>
+		<div>
+			<div>
+				<label>Password: </label><span id="userPassword"
+					class="info"></span>
+			</div>
+			<div>
+				<input type="password" id="userPassword" name="userPassword"
+					class="inputBox" />
+			</div>
+		</div>
+		<div>
+			<input type="submit" id="login" name="login" value="Login" />
+		</div>
+		<div>
+			<input type="submit" id="register" name="register" value="Register" />
+		</div>
+	</form>
+</div>
 <script>
 $(document).ready(function () {
     $("#login-icon").click(function () {

@@ -18,12 +18,13 @@ else # If the page is loaded with POST or PATCH
 $query = $params['q'];
 $count = $params['count'];
 $offset = $params['offset'];
+$type = $params['type'];
 $id = $params['id'];
 # Get information
-if (isset($query))
+if (isset($query) or isset($type))
 {
     include_once('api/v1/search.php');
-    $slist = search($query, $count, $offset);
+    $slist = search($query, $count, $offset, $type);
 }
 elseif (isset($id))
 {
@@ -60,18 +61,67 @@ include_once("topbar.php");
 # It is vulnerable to SQL injection and this risk cannot be mitigated.
 # PDO offers parameterization and allows requests to be re-used which is VITAL to this project.
 # only run requests for content and information in a file in api/v1 to make the site more modular
-?>
+
+# Hero section of the page should be loaded when not using a query
+if (!isset($info) and !isset($slist))
+{
+    echo <<<END
     <div class="hero-section">
-	<div>
-	<div class="hero-section-text">
-	    <h1 id="hero">AdsDb</h1>
-	</div>
-	<input type="search" name="search" placeholder="Discover the possibilites" class="animated-search-form">
-	</div>
-	<div class="hero-section-text">
-	    <h5 id="herosub">Renting Together</h5>
-	</div>    
+        <div>
+        <div class="hero-section-text">
+            <h1 id="hero">AdsDb</h1>
+        </div>
+        <input type="search" name="search" placeholder="Discover the possibilites" class="animated-search-form">
+        </div>
+        <div class="hero-section-text">
+            <h5 id="herosub">Renting Together</h5>
+        </div>    
     </div>
+    END;
+
+}
+elseif (isset($info))
+{
+    # TODO: Add item info page with a "Rent Now" option
+}
+elseif (isset($slist)) # Search page
+{
+    $slist = json_decode($slist);
+    if (isset($type)) # Does the search have a type field
+    {
+        echo '<h1>Results</h1>';
+        # Print result cards one by one
+        foreach ($slist as $item)
+        {
+            # If the item has a productId then get that, otherwise get the userId
+            $itemid = $itemname = $price = '';
+            if (isset($item->productId))
+            {
+                $itemid = $item->productId;
+                $itemname = $item->name;
+                $price = "<p class=\"price\">${cost}/mo</p>";
+            }
+            else
+            {
+                $itemid = $item->userId;
+                $itemname = $item->profileName;
+                $price = '';
+            }
+            # Insert the product card onto the page
+            echo <<<PRODUCTCARD
+<div class="card">
+<img src="api/v1/image.php?id=$itemid&type=$type">
+<h1>$itemname</h1>
+$price
+<p><a href="/reviews/?id=$itemid">Reviews for this product</a></p>
+<p><form action="/rent/?id=$itemid"><input type="submit" value="Rent"/></form></p>
+</div>
+PRODUCTCARD;
+        }
+    }
+}
+?>
+    
 <script>
 $(document).foundation();
 </script>
