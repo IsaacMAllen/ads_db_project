@@ -74,6 +74,18 @@ div#success {
     cursor: pointer;
 }
 
+#logout {
+    background-color: #09F;
+    border: 1px solid #1398f1;
+    font-family: Arial;
+    color: white;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    display: block;
+}
+
 #register {
     background-color: #668D3C;
     border: 1px solid #1398f1;
@@ -206,6 +218,6 @@ div#success {
     width: 25px;
 }
 
-.topButton:hover:after{
+.topButton:hover:after {
         background-color: #000;
-    }
+}

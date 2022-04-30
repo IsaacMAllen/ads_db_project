@@ -8,6 +8,7 @@ include("$directoryname/api/v1/guard.php");
 # Required for the username in the form currently
 # Generate a CSRF nonce
 $_SESSION['token'] = bin2hex(random_bytes(32));
+$pagetoken = hash_hmac('sha256', "api/v1/authenticate.php", $_SESSION['token']);
 # Relative path!
 
 ?>
@@ -49,28 +50,46 @@ $_SESSION['token'] = bin2hex(random_bytes(32));
         </ul>
     </div>
     <div class="top-bar-right">
-        <ul class="menu">
+        <ul class="dropdown menu" data-dropdown-menu>
             <!-- TODO: Add login option here with modal replaced with account dropdown -->
-	    <li>
+			<li>
+			
+			<?php
+				if (!isset($_SESSION["user"]))
+				{
+					echo '<div id="login-icon"><img src="icon/icon-login.png" height="10"></div>';
+				}
+				else
+				{
+					$sname = $_SERVER["SERVER_NAME"];
+					$thisfile = $_SERVER['PHP_SELF'];
+					$urlquerystring = $_SERVER['QUERY_STRING'];
+					echo <<<ACCOUNT
+<a href="#">My Account</a>
+<ul class="menu vertical">
+<li><a href="https://$sname/$directoryname/account">Preferences</a></li>
+<li class="has-form"><form action="https://$sname/$directoryname/api/v1/authenticate.php" 
+	class="logout-form" id="logout-form" method="post" enctype="multipart/form-data">
+<input type="hidden" name="token" value="$pagetoken"/>
+<input type="hidden" name="redir" value="https://${sname}${thisfile}${urlquerystring}"/>
+<input type="Submit" id="logout" name="logout" value="Log Out"/></form>
+</li>
+</ul>
+ACCOUNT;
+				}
+				?>
 
-	    <div id="login-icon">
-		<?php 
-		    echo '
-		    <img src="icon/icon-login.png" height="10">
-		    ';
-		?>
-	    </div>
-	    </li>
-	    <li><input type="search" placeholder="Search listings"></li>
-            <li><button type="button" class="button">Search</button></li>
-        </ul>
-    </div>
+			</li>
+			<li><input type="search" placeholder="Search listings"></li>
+			<li><button type="button" class="button">Search</button></li>
+		</ul>
+	</div>
 </div>
 
 <div id="login-popup">
 	<form action="<?php echo "https://" . $_SERVER["SERVER_NAME"] . 
 		"$directoryname/api/v1/authenticate.php" ?>"
-		class="login-form" action="" id="login-form" method="post" enctype="multipart/form-data">
+		class="login-form" id="login-form" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="token" value="<?php
     		echo hash_hmac('sha256', "api/v1/authenticate.php", $_SESSION['token']);
 		?>" />

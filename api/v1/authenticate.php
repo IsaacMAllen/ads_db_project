@@ -15,13 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST')
 if (!hash_equals(hash_hmac('sha256', "api/v1/authenticate.php", $_SESSION['token']),
     $_POST['token']))
 {
-    echo $_POST['token'] . " " . hash_hmac('sha256', "$directoryname/authenticate.php", $_SESSION['token']);
     header('HTTP/1.1 400 Bad Request');
     die("Bad CSRF token");
 }
 
 # Now we use the password
-$input_password_hash = password_hash($_POST['userPassword'], PASSWORD_BCRYPT);
+$password = $_POST['userPassword'];
 
 # Redirect function
 function redirect()
@@ -44,12 +43,20 @@ if ($_POST['register'] === 'Register')
 {
     $email = $_POST['userEmail'];
     $userId = strtr(base64_encode(uniqid()), '+/=', '._-');
-    add_rentee($userId, $input_password_hash, $email);
+    add_rentee($userId, $password, $email);
+    $_SESSION['user'] = $userId;
     redirect();
 }
 elseif ($_POST['login'] === 'Login')
 {
-
+    $email = $_POST['userEmail'];
+    $_SESSION['user'] = is_rentee($password, $email);
+    redirect();
+}
+elseif ($_POST['logout'] === 'Log Out')
+{
+    $_SESSION['user'] = NULL;
+    redirect();
 }
 
 ?>

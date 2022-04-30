@@ -14,7 +14,6 @@ try
 {
     $pdo = new PDO($dsn, $user, $password);
     $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
 catch (PDOException $e)
 {
@@ -197,12 +196,29 @@ function get_image_id_type($id, $type)
 
 # Add a rentee to the database--we will add an option to fill a form to become a rentee soon
 $query_add_rentee = $pdo->prepare("INSERT INTO project_rentee (userId, pwHash, email) VALUES (?, ?, ?)");
+$query_add_rentee->setFetchMode(PDO::FETCH_ASSOC);
 function add_rentee($userid, $passwordHash, $email)
 {
-    try {
     global $query_add_rentee;
-    $query_add_rentee->execute(array($userid, $passwordHash, $email)); } catch(Exception $e) {die($e->getMessage());}
+    $query_add_rentee->execute(array($userid, password_hash($passwordHash, PASSWORD_BCRYPT), $email));
 }
 
-
+# Verify if the rentee entry in the database is correct
+$query_is_rentee = $pdo->prepare("SELECT userId, pwHash FROM project_rentee WHERE email = ?");
+$query_is_rentee->setFetchMode(PDO::FETCH_ASSOC);
+function is_rentee($password, $email)
+{
+    global $query_is_rentee;
+    $query_is_rentee->execute(array($email));
+    $fetched = $query_is_rentee->fetch();
+    # Now check if the password hash is correct
+    if (password_verify($password, $fetched["pwHash"]))
+    {
+        return $fetched["userId"];
+    }
+    else
+    {
+        return NULL;
+    }
+}
 ?>
