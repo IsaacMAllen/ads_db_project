@@ -5,30 +5,23 @@ include("api/v1/guard.php");
 body
 {
     background-color: #222222;
-    color: #DDDDDD;
-}
-
-body *
-{
-    background-color: #222222;
-    color: #DDDDDD;
 }
 
 #top-bar
 {
-    background-color: #000000;
+    background-color: #141d26;
     color: #CCCCCC;
 }
 
 #top-bar *
 {
-    background-color: #000000;
+    background-color: #141d26;
     color: #CCCCCC;
 }
 
 #top-bar button
 {
-    background-color: #0000CC;
+    background-color: #262447;
     color: #CCCCCC;
 }
 </style>
