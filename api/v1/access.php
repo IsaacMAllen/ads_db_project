@@ -5,7 +5,7 @@ include_once('get-group-password.php');
 # Credentials
 $host = 'localhost';
 $db = 'CS_2022_Spring_3430_101_t1';
-$user = 'joneshl4';
+$user = $GLOBALS['group-sql-username'];
 $password = $GLOBALS['group-sql-password'];
 
 # Data source name and connect!
