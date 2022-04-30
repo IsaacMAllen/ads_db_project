@@ -46,7 +46,7 @@ include("api/v1/guard.php");
 	    <div id="login-icon">
 		<?php 
 		    echo '
-		    <img src="/icon/icon-login.png" height="10">
+		    <img src="icon/icon-login.png" height="10">
 		    ';
 		?>
 	    </div>

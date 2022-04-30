@@ -28,7 +28,7 @@ crossorigin="anonymous"></script>
   font-size: 22px;
 }
 
-.card input {
+.card a {
   border: none;
   outline: 0;
   padding: 12px;
@@ -38,9 +38,10 @@ crossorigin="anonymous"></script>
   cursor: pointer;
   width: 100%;
   font-size: 18px;
+  display: inline-block;
 }
 
-.card button:hover {
+.card a:hover {
   opacity: 0.7;
 }
 </style>';

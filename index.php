@@ -62,6 +62,52 @@ include_once("topbar.php");
 # PDO offers parameterization and allows requests to be re-used which is VITAL to this project.
 # only run requests for content and information in a file in api/v1 to make the site more modular
 
+# Grid/card space
+function grid_boilerplate($list, $type, $readable_name)
+{
+    echo '<h1 class="text-center">' . $readable_name . '</h1>';
+    echo <<<GRIDHEAD
+<div class="grid-container">
+<div class="grid-x grid-margin-x small-up-1 medium-up-3">
+GRIDHEAD;
+    # Print result cards one by one
+    if (sizeof($list) < 1)
+    {
+        echo '<div class="cell">No results found in this section</div></div></div>';
+        return;
+    }
+    foreach ($list as $item)
+    {
+        # If the item has a productId then get that, otherwise get the userId
+        $itemid = $itemname = $price = $rent = '';
+        if (isset($item->productId))
+        {
+            $itemid = $item->productId;
+            $itemname = $item->name;
+            $price = "<p class=\"price\">${cost}/mo</p>";
+            $rent = "<a href=\"/rent/?id={$itemid}\">Rent</a>";
+        }
+        else
+        {
+            $itemid = $item->userId;
+            $itemname = $item->profileName;
+        }
+        # Insert the product card onto the page
+        echo <<<PRODUCTCARD
+    <div class="cell">
+    <div class="card">
+    <img src="api/v1/image.php?id=$itemid&type=$type">
+    <div class="card-section">
+    <h1>$itemname</h1>
+    $price
+    <p><a href="/reviews/?id=$itemid">See Reviews</a></p>
+    $rent
+    </div></div></div>
+    PRODUCTCARD;
+    }
+    echo '</div></div>';
+}
+
 # Hero section of the page should be loaded when not using a query
 if (!isset($info) and !isset($slist))
 {
@@ -89,35 +135,14 @@ elseif (isset($slist)) # Search page
     $slist = json_decode($slist);
     if (isset($type)) # Does the search have a type field
     {
-        echo '<h1>Results</h1>';
-        # Print result cards one by one
-        foreach ($slist as $item)
-        {
-            # If the item has a productId then get that, otherwise get the userId
-            $itemid = $itemname = $price = '';
-            if (isset($item->productId))
-            {
-                $itemid = $item->productId;
-                $itemname = $item->name;
-                $price = "<p class=\"price\">${cost}/mo</p>";
-            }
-            else
-            {
-                $itemid = $item->userId;
-                $itemname = $item->profileName;
-                $price = '';
-            }
-            # Insert the product card onto the page
-            echo <<<PRODUCTCARD
-<div class="card">
-<img src="api/v1/image.php?id=$itemid&type=$type">
-<h1>$itemname</h1>
-$price
-<p><a href="/reviews/?id=$itemid">Reviews for this product</a></p>
-<p><form action="/rent/?id=$itemid"><input type="submit" value="Rent"/></form></p>
-</div>
-PRODUCTCARD;
-        }
+        grid_boilerplate($slist, $type, "Results");
+    }
+    else
+    {
+        grid_boilerplate($slist->product, 'product', "Products");
+        grid_boilerplate($slist->service, 'service', "Services");
+        grid_boilerplate($slist->renter, 'renter', "Renters");
+        grid_boilerplate($slist->rentee, 'rentee', "Clients");
     }
 }
 ?>
