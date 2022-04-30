@@ -74,25 +74,25 @@ function get_object_by_uuid($id)
 }
 
 # Get for hybrid search and stuff by building lots of strings
-$cols_user = 'SELECT userId, profileName FROM ';
-$cols_product = 'SELECT productId, name, cost, offered_on FROM ';
-$profile_name = ' WHERE profileName LIKE ?';
-$name_product = ' WHERE name LIKE ? AND tflag = \'I\'';
-$name_service = ' WHERE name LIKE ? AND tflag = \'S\'';
+$cols_user = 'SELECT userId, profileName FROM';
+$cols_product = 'SELECT productId, name, cost, offered_on FROM';
+$profile_name = 'WHERE profileName LIKE :name';
+$name_product = 'WHERE name LIKE :name AND tflag = \'I\'';
+$name_service = 'WHERE name LIKE :name AND tflag = \'S\'';
 # Filtering for high quality results
-$filter_profile_name = ' ORDER BY profileName DESC ';
-$filter_name = ' ORDER BY name DESC ';
-$filter_continued = 'LIMIT ?,?';
+$filter_profile_name = 'ORDER BY profileName DESC';
+$filter_name = 'ORDER BY name DESC';
+$filter_continued = 'LIMIT :offset,:count';
 # Renters and rentees
-$search_query_rentee = $pdo->prepare($cols_user . 'RenteeUnauth' . $profile_name . $filter_profile_name . $filter_continued);
+$search_query_rentee = $pdo->prepare("$cols_user RenteeUnauth $profile_name $filter_profile_name $filter_continued");
 $search_query_rentee->setFetchMode(PDO::FETCH_ASSOC);
-$search_query_renter = $pdo->prepare($cols_user . 'RenterUnauth' . $profile_name . $filter_profile_name . $filter_continued);
+$search_query_renter = $pdo->prepare("$cols_user RenterUnauth $profile_name $filter_profile_name $filter_continued");
 $search_query_renter->setFetchMode(PDO::FETCH_ASSOC);
 # Fetch product entities
-$search_query_product = $pdo->prepare($cols_product . 'project_product' . $name_product . $filter_name . $filter_continued);
+$search_query_product = $pdo->prepare("$cols_product project_product $name_product $filter_name $filter_continued");
 $search_query_product->setFetchMode(PDO::FETCH_ASSOC);
 # Fetch service entities
-$search_query_service = $pdo->prepare($cols_product . 'project_product' . $name_service . $filter_name . $filter_continued);
+$search_query_service = $pdo->prepare("$cols_product project_product $name_service $filter_name $filter_continued");
 $search_query_service->setFetchMode(PDO::FETCH_ASSOC);
 # Get an object's information by its keywords
 function get_object_by_keywords($kw = '', $count = 25, $offset = 0, $type = '')
@@ -124,20 +124,31 @@ function get_object_by_keywords($kw = '', $count = 25, $offset = 0, $type = '')
         return array('error' => 'invalid count or offset');
     }
     # Longer names but same amount of globals as last time
-    global $search_query_rentee, $search_query_renter, $search_query_product, $search_query_service;
-    $queries = array($search_query_rentee, $search_query_renter, $search_query_product, $search_query_service);
+    global $search_query_rentee, $search_query_renter, $search_query_product, $search_query_service, $pdo;
     $results = array();
     $kw = '%' . $kw . '%';
-    foreach ($queries as $dispose => $query) {
-        $query->bindParam(1, $kw);
-        $query->bindParam(2, $offset, PDO::PARAM_INT);
-        $query->bindParam(3, $count, PDO::PARAM_INT);
-        $query->execute();
-    }
-    $results->rentee = $search_query_rentee->fetchAll();
-    $results->renter = $search_query_renter->fetchAll();
-    $results->product = $search_query_product->fetchAll();
-    $results->service = $search_query_service->fetchAll();
+    # very WET but I don't have time to "vectorize" it
+    # I'm never using php again unless I fork a version which is very syntactically strict
+    $search_query_rentee->bindParam('name', $kw);
+    $search_query_rentee->bindParam('offset', $offset, PDO::PARAM_INT);
+    $search_query_rentee->bindParam('count', $count, PDO::PARAM_INT);
+    $search_query_rentee->execute();
+    array_push($results, "rentee", $search_query_rentee->fetchAll());
+    $search_query_renter->bindParam('name', $kw);
+    $search_query_renter->bindParam('offset', $offset, PDO::PARAM_INT);
+    $search_query_renter->bindParam('count', $count, PDO::PARAM_INT);
+    $search_query_renter->execute();
+    array_push($results, "renter", $search_query_renter->fetchAll());
+    $search_query_product->bindParam('name', $kw);
+    $search_query_product->bindParam('offset', $offset, PDO::PARAM_INT);
+    $search_query_product->bindParam('count', $count, PDO::PARAM_INT);
+    $search_query_product->execute();
+    array_push($results, "product", $search_query_product->fetchAll());
+    $search_query_service->bindParam('name', $kw);
+    $search_query_service->bindParam('offset', $offset, PDO::PARAM_INT);
+    $search_query_service->bindParam('count', $count, PDO::PARAM_INT);
+    $search_query_service->execute();
+    array_push($results, "service", $search_query_service->fetchAll());
     # Select results by type
 
     if (isset($results[$type]))
