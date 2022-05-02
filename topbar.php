@@ -3,6 +3,9 @@
 session_start();
 $directoryname = dirname($_SERVER['SCRIPT_NAME']);
 $uri = urlencode($_SERVER['REQUEST_URI']);
+$sname = $_SERVER["SERVER_NAME"];
+$thisfile = $_SERVER['PHP_SELF'];
+$urlquerystring = $_SERVER['QUERY_STRING'];
 $querystring .= "?redir=$uri";
 include("$directoryname/api/v1/guard.php");
 # Required for the username in the form currently
@@ -35,7 +38,8 @@ $pagetoken = hash_hmac('sha256', "api/v1/authenticate.php", $_SESSION['token']);
 <div class="top-bar" id="top-bar">
     <div class="top-bar-left">
         <ul class="dropdown menu" data-dropdown-menu>
-            <li class="menu-text">ADS.com</li>
+            <li><a class="menu-text" href="<?php echo "https://" . $_SERVER["SERVER_NAME"] . 
+		"$directoryname" ?>">ADS.com</a></li>
             <li>
                 <a href="?type=recent">Offers</a>
                 <ul class="menu vertical">
@@ -61,9 +65,6 @@ $pagetoken = hash_hmac('sha256', "api/v1/authenticate.php", $_SESSION['token']);
 				}
 				else
 				{
-					$sname = $_SERVER["SERVER_NAME"];
-					$thisfile = $_SERVER['PHP_SELF'];
-					$urlquerystring = $_SERVER['QUERY_STRING'];
 					echo <<<ACCOUNT
 <a href="#">My Account</a>
 <ul class="menu vertical">
@@ -80,8 +81,13 @@ ACCOUNT;
 				?>
 
 			</li>
-			<li><input type="search" placeholder="Search listings"></li>
-			<li><button type="button" class="button">Search</button></li>
+			<li class="has-form">
+				<form method="post" enctype="multipart/form-data" class="search-form"
+				action="<?php echo "https://${sname}$directoryname/"?>">
+					<input type="text" name="q" placeholder="Search listings" style="display: inline">
+					<button type="submit" class="button" style="display: inline">Search</button>
+				</form>
+			</li>
 		</ul>
 	</div>
 </div>

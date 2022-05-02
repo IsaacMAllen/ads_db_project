@@ -118,7 +118,11 @@ if (!isset($info) and !isset($slist))
         <div class="hero-section-text">
             <h1 id="hero">AdsDb</h1>
         </div>
-        <input type="search" name="search" placeholder="Discover the possibilites" class="animated-search-form">
+        <form method="post" enctype="multipart/form-data" class="search-form"
+        action="https://${sname}$directoryname/">
+            <input type="text" name="q" placeholder="Discover the possiblities">
+            <button type="submit" class="button">Search</button>
+        </form>
         </div>
         <div class="hero-section-text">
             <h5 id="herosub">Renting Together</h5>
