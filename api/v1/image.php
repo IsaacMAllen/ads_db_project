@@ -2,14 +2,15 @@
 include_once('access.php');
 
 # Get info on a user, product, or service with that base64 encoded uuid
-function info($id = '', $type = '')
+function get_image($id = '', $type = '')
 {
-    $results = json_encode(get_image_id_type($id, $type));
+    $results = get_image_id_type($id, $type);
     return $results;
 }
 
 if (count(get_included_files()) === 4)
 {
+    header("Content-Type: image/jpeg");
     # If the page uses the get method load the information from the query string
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
     {
