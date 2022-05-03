@@ -31,6 +31,7 @@
   opacity: 0.7;
 }
 </style>
+=======
 <?php
 include_once("head.php");
 include_once("topbar.php");

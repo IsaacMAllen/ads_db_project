@@ -5,7 +5,7 @@ include_once('get-group-password.php');
 # Credentials
 $host = 'localhost';
 $db = 'CS_2022_Spring_3430_101_t1';
-$user = 'allenim';
+$user = $GLOBALS['group-sql-username'];
 $password = $GLOBALS['group-sql-password'];
 
 # Data source name and connect!
@@ -83,6 +83,9 @@ $name_service = 'WHERE name LIKE :name AND tflag = \'S\'';
 $filter_profile_name = 'ORDER BY profileName DESC';
 $filter_name = 'ORDER BY name DESC';
 $filter_continued = 'LIMIT :offset,:count';
+# Fetch the most recent products/services as determined by offered_on
+$search_query_recent = $pdo->prepare("$cols_product project_product WHERE name LIKE :name ORDER BY offered_on DESC $filter_continued");
+$search_query_recent->setFetchMode(PDO::FETCH_ASSOC);
 # Renters and rentees
 $search_query_rentee = $pdo->prepare("$cols_user RenteeUnauth $profile_name $filter_profile_name $filter_continued");
 $search_query_rentee->setFetchMode(PDO::FETCH_ASSOC);
@@ -124,11 +127,17 @@ function get_object_by_keywords($kw = '', $count = 25, $offset = 0, $type = '')
         return array('error' => 'invalid count or offset');
     }
     # Longer names but same amount of globals as last time
-    global $search_query_rentee, $search_query_renter, $search_query_product, $search_query_service, $pdo;
+    global $search_query_recent, $search_query_rentee, $search_query_renter,
+        $search_query_product, $search_query_service, $pdo;
     $results = array();
     $kw = '%' . $kw . '%';
     # very WET but I don't have time to "vectorize" it
     # I'm never using php again unless I fork a version which is very syntactically strict
+    $search_query_recent->bindParam('name', $kw);
+    $search_query_recent->bindParam('offset', $offset, PDO::PARAM_INT);
+    $search_query_recent->bindParam('count', $count, PDO::PARAM_INT);
+    $search_query_recent->execute();
+    $results["recent"] = $search_query_recent->fetchAll();
     $search_query_rentee->bindParam('name', $kw);
     $search_query_rentee->bindParam('offset', $offset, PDO::PARAM_INT);
     $search_query_rentee->bindParam('count', $count, PDO::PARAM_INT);
@@ -159,8 +168,57 @@ function get_object_by_keywords($kw = '', $count = 25, $offset = 0, $type = '')
 }
 
 # Get an image with an id and type
+$image_query_product = $pdo->prepare("SELECT picture FROM project_product WHERE productId = ?");
+$image_query_renter = $pdo->prepare("SELECT picture FROM RenterUnauth WHERE userId = ?");
+$image_query_rentee = $pdo->prepare("SELECT picture FROM RenteeUnauth WHERE userId = ?");
 function get_image_id_type($id, $type)
 {
-    # if ($type = )
+    global $image_query_product, $image_query_renter, $image_query_rentee;
+    # Products and services are in the same table
+    if ($type === "product" or $type === "service" or $type === "recent")
+    {
+        $image_query_product->execute(array($id));
+        return $image_query_product->fetchAll()[0]["picture"];
+    }
+
+    # Renters and rentees are in different tables
+    if ($type === "renter")
+    {
+        $image_query_renter->execute(array($id));
+        return $image_query_renter->fetchAll()[0]["picture"];
+    }
+    if ($type === "rentee")
+    {
+        $image_query_rentee->execute(array($id));
+        return $image_query_rentee->fetchAll()[0]["picture"];
+    }
+}
+
+# Add a rentee to the database--we will add an option to fill a form to become a rentee soon
+$query_add_rentee = $pdo->prepare("INSERT INTO project_rentee (userId, pwHash, email) VALUES (?, ?, ?)");
+$query_add_rentee->setFetchMode(PDO::FETCH_ASSOC);
+function add_rentee($userid, $passwordHash, $email)
+{
+    global $query_add_rentee;
+    $query_add_rentee->execute(array($userid, password_hash($passwordHash, PASSWORD_BCRYPT), $email));
+}
+
+# Verify if the rentee entry in the database is correct
+$query_is_rentee = $pdo->prepare("SELECT userId, pwHash FROM project_rentee WHERE email = ?");
+$query_is_rentee->setFetchMode(PDO::FETCH_ASSOC);
+function is_rentee($password, $email)
+{
+    global $query_is_rentee;
+    $query_is_rentee->execute(array($email));
+    $fetched = $query_is_rentee->fetch();
+    # Now check if the password hash is correct
+    if (password_verify($password, $fetched["pwHash"]))
+    {
+        return $fetched["userId"];
+    }
+    else
+    {
+        return NULL;
+    }
 }
 ?>
