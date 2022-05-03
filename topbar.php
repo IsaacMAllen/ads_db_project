@@ -1,3 +1,6 @@
+
+<script>
+  </script>
 <?php
 include("api/v1/guard.php");
 ?>
@@ -11,6 +14,7 @@ body
 {
     background-color: #141d26;
     color: #CCCCCC;
+    top: 0;
 }
 
 #top-bar *
@@ -98,6 +102,10 @@ body
 $(document).ready(function () {
     $("#login-icon").click(function () {
 	$("#login-popup").show();
+	$('html, body').css({
+	        overflow: 'hidden',
+		height: '100%'
+	});
     });
     //Login Form validation on click event
     $("#login-form").submit(function(event) {
@@ -131,6 +139,10 @@ $(document).ready(function () {
     $(document).on("click", function(event) {
 	if((!$(event.target).closest("#login-form").length && $("#login-popup").is(":visible") && !$(event.target).closest("#login-icon").length)) {
 	    $("#login-popup").hide();
+	    $('html, body').css({
+		    overflow: 'auto',
+		    height: 'auto'
+	    });
 	} 
     });
 });

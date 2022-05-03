@@ -14,5 +14,6 @@ echo '
 integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
 crossorigin="anonymous"></script>    
 <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.4/dist/js/foundation.min.js" crossorigin="anonymous"></script>
+<script src="https://github.com/garand/sticky/blob/73b0fbe38c5f6371ae3dfaa66eb836fabc0a4aec/jquery.sticky.js"></script>
 ';
 ?>
