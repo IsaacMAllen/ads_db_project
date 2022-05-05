@@ -1,3 +1,6 @@
+
+<script>
+  </script>
 <?php
 # Start the session
 $directoryname = dirname($_SERVER['SCRIPT_NAME']);
@@ -20,6 +23,7 @@ $pagetoken = hash_hmac('sha256', "api/v1/authenticate.php", $_SESSION['token']);
 {
     background-color: #141d26;
     color: #CCCCCC;
+    top: 0;
 }
 
 #top-bar *
@@ -133,6 +137,10 @@ ACCOUNT;
 $(document).ready(function () {
     $("#login-icon").click(function () {
 	$("#login-popup").show();
+	$('html, body').css({
+	        overflow: 'hidden',
+		height: '100%'
+	});
     });
     //Login Form validation on click event
     $("#login-form").submit(function(event) {
@@ -166,6 +174,10 @@ $(document).ready(function () {
     $(document).on("click", function(event) {
 	if((!$(event.target).closest("#login-form").length && $("#login-popup").is(":visible") && !$(event.target).closest("#login-icon").length)) {
 	    $("#login-popup").hide();
+	    $('html, body').css({
+		    overflow: 'auto',
+		    height: 'auto'
+	    });
 	} 
     });
 });
