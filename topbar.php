@@ -76,7 +76,7 @@ $pagetoken = hash_hmac('sha256', "api/v1/authenticate.php", $_SESSION['token']);
 <li class="has-form"><form action="https://$sname/$directoryname/api/v1/authenticate.php" 
 	class="logout-form" id="logout-form" method="post" enctype="multipart/form-data">
 <input type="hidden" name="token" value="$pagetoken"/>
-<input type="hidden" name="redir" value="https://${sname}${thisfile}${urlquerystring}"/>
+<input type="hidden" name="redir" value="https://${sname}${thisfile}?${urlquerystring}"/>
 <input type="Submit" id="logout" name="logout" value="Log Out"/></form>
 </li>
 </ul>
@@ -104,7 +104,7 @@ ACCOUNT;
     		echo hash_hmac('sha256', "api/v1/authenticate.php", $_SESSION['token']);
 		?>" />
 		<input type="hidden" name="redir" value="<?php echo "https://" . $_SERVER["SERVER_NAME"] .
-			$_SERVER['PHP_SELF'] . $_SERVER['QUERY_STRING']; ?>"/>
+			$_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']; ?>"/>
 		<h1>Login</h1>
 		<div>
 			<div>
