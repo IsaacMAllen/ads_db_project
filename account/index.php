@@ -3,6 +3,9 @@ include_once("../getvars.php");
 if ($slist or $info) {
     header("Location: ../?" . $_SERVER['QUERY_STRING']);
 }
+if ($_SERVER["QUERY_STRING"]["newid"]) {
+    header("Location: ../?id=$newid");
+}
 ?>
 <!DOCTYPE html>
 <html>
