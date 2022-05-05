@@ -1,5 +1,6 @@
 <?php
-include("$directoryname/api/v1/guard.php");
+include("api/v1/guard.php");
+session_start();
 # This is code that runs before HTML content is sent
 # Functionality like AJAX not handled through api/v1 is here.
 # This includes search requests and single-page things.
