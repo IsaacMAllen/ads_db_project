@@ -1,4 +1,0 @@
-SetEnv USER [your_php_my_admin_username]
-SetEnv PASS [your_php_my_admin_password]
-SetENV root /usr/local/apache2/htdocs/u/[your username]/adsdb/ads_db_project/
-SetENV path /[your username]/adsdb/ads_db_project/
