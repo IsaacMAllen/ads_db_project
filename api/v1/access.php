@@ -75,7 +75,7 @@ function get_object_by_uuid($id)
 
 # Get for hybrid search and stuff by building lots of strings
 $cols_user = 'SELECT userId, profileName FROM';
-$cols_product = 'SELECT productId, name, cost, offered_on FROM';
+$cols_product = 'SELECT productId, name, cost, offered_on, renterId FROM';
 $profile_name = 'WHERE profileName LIKE :name';
 $name_product = 'WHERE name LIKE :name AND tflag = \'I\'';
 $name_service = 'WHERE name LIKE :name AND tflag = \'S\'';

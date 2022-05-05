@@ -1,13 +1,12 @@
 <?php
 # Start the session
-session_start();
 $directoryname = dirname($_SERVER['SCRIPT_NAME']);
 $uri = urlencode($_SERVER['REQUEST_URI']);
 $sname = $_SERVER["SERVER_NAME"];
 $thisfile = $_SERVER['PHP_SELF'];
 $urlquerystring = $_SERVER['QUERY_STRING'];
-$querystring .= "?redir=$uri";
-include("$directoryname/api/v1/guard.php");
+$urlquerystring .= "?redir=$uri";
+include("api/v1/guard.php");
 # Required for the username in the form currently
 # Generate a CSRF nonce
 $_SESSION['token'] = bin2hex(random_bytes(32));
